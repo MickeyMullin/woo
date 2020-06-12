@@ -3,12 +3,15 @@ const parse = require('csv-parse/lib/sync')
 const stringify = require('csv-stringify')
 const transform = require('stream-transform')
 const fs = require('fs').promises
+const fsSync = require('fs')
 const path = require('path')
 // const readline = require('readline')
 const util = require('util')
 
 const dir = __dirname
-const SHOP_FILE = 'FSP-Shop-orders-2020_06_08_18_50_58.csv'
+const dataDir = path.join(__dirname, '../data')
+const outputDir = path.join(__dirname, '../static')
+const SHOP_FILE = path.join(dataDir, 'FSP-Shop-orders-2020_06_12_10_10_02.csv')
 
 let pf17
 let isOutput = false
@@ -16,7 +19,7 @@ let isOutput = false
 parseCsv()
 
 async function parseCsv() {
-  const content = await fs.readFile(path.join(dir, SHOP_FILE))
+  const content = await fs.readFile(SHOP_FILE)
 
   const records = parse(content, {
     columns: true,
@@ -74,7 +77,9 @@ async function parseCsv() {
 
   console.log('-==] parseCsv done [==-')
 
-  writeCsv()
+  // writeCsv()
+  writeJso()
+  writeJson()
 }
 
 function parseItems(record, items_name) {
@@ -145,4 +150,38 @@ function writeCsv() {
 
   // console.log(util.inspect(records))
   console.log('done write')
+}
+
+function writeFile(arr, filename, arrName) {
+  const outputName = arrName ? arrName : 'items'
+  const outputFile = path.join(outputDir, filename)
+
+  fsSync.writeFileSync(outputFile, util.inspect(arr, {
+    showHidden: false,
+    compact: false,
+    maxArrayLength: Infinity
+  }, 'utf-8'))
+
+  console.log('wrote ' + filename + ' with ' + arr.length + ' ' + outputName)
+}
+
+function writeFileRaw(arr, filename, arrName) {
+  const outputName = arrName ? arrName : 'items'
+  const outputFile = path.join(outputDir, filename)
+
+  fsSync.writeFileSync(outputFile, arr.join('\n'), 'utf-8')
+
+  console.log('wrote raw ' + filename + ' with ' + arr.length + ' ' + outputName)
+}
+
+function writeJso() {
+  writeFile(pf17, 'pf17.js')
+}
+
+function writeJson() {
+  fsSync.writeFileSync(
+    path.join(outputDir, 'pf17.json'),
+    JSON.stringify(pf17),
+    'utf-8'
+  )
 }
