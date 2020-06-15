@@ -1,0 +1,23 @@
+{
+  "name": "woo",
+  "version": "1.0.0",
+  "description": "WooCommerce utilities",
+  "main": "app.js",
+  "dependencies": {
+    "csv": "^5.3.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MickeyMullin/woo.git"
+  },
+  "author": "Mickey Mullin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MickeyMullin/woo/issues"
+  },
+  "homepage": "https://github.com/MickeyMullin/woo#readme"
+}
